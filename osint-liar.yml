@@ -1,0 +1,340 @@
+openapi: 3.0.3
+info:
+  title: OSINT LIAR API
+  description: The description of the OSINT LIAR API for building your own applications and integrations
+  version: 0.1.0
+servers:
+  - url: http://127.0.0.1:9906/v1
+    description: Your local installation of OSINT LIAR
+paths:
+  /case-management:
+    get:
+      summary: Get a list of case management records
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseManagement'
+    post:
+      summary: Create a new case
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseManagement'
+      responses:
+        '201':
+          description: Created
+    put:
+      summary: Update an existing case
+      parameters:
+        - in: query
+          name: Uuid
+          schema:
+            type: string
+          required: true
+          description: The case's Uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseManagement'
+      responses:
+        '200':
+          description: Updated
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete the case and its contents
+      parameters:
+        - in: query
+          name: Uuid
+          schema:
+            type: string
+          required: true
+          description: The case's Uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseManagement'
+  /content:
+    get:
+      summary: Get a list of collected content, ordered by last updated on
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiCoreData'
+    put:
+      summary: Update an core data record by UUID
+      parameters:
+        - in: query
+          name: Uuid
+          required: true
+          schema:
+            type: string
+          description: UUID of the core data record to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCoreData'
+      responses:
+        '200':
+          description: Record Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCoreData'        
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete a record by UUID
+      parameters:
+        - in: query
+          name: Uuids
+          required: true
+          description: An array of uuids
+          schema:
+            type: array
+            items:
+              type: string
+            minItems: 1
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found                  
+  /content/message:
+    post:
+      summary: Create a new content record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCoreData'
+      responses:
+        '200':
+          description: Created
+  /content/get:
+    get:
+      summary: Get a single ApiCore data record by UUID
+      parameters:
+        - in: query
+          name: Uuid
+          required: true
+          schema:
+            type: string
+          description: UUID of the core data record
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCoreData'
+        '404':
+          description: Record not found
+components:
+  schemas:
+    CaseManagement:
+      type: object
+      properties:
+        Name:
+          type: string
+          description: Case name
+        Note:
+          type: string
+        CaseWorkerName:
+          type: string
+        CaseNumber:
+          type: string
+        CreatedBy:
+          type: string
+          description: The email of the author who captured the data
+        SubjectName:
+          type: string
+        SubjectImageData:
+          type: string
+          description: Base64 encoding of an image
+        UpdatedBy:
+          type: string
+          description: Get the last person who updated this record
+        CreatedOn:
+          type: string
+          format: date-time
+        UpdatedOn:
+          type: string
+          format: date-time
+        Uuid:
+          type: string
+        SourcedFrom:
+          type: string
+      required:
+        - Name
+    ApiCoreData:
+      type: object
+      properties:
+        ContentUuid:
+          type: string
+        ContentTypeName:
+          type: string
+        ContentCreatedBy:
+          type: string
+        ContentCreatedOn:
+          type: string
+          format: date-time
+        ContentUpdatedBy:
+          type: string
+        ContentUpdatedOn:
+          type: string
+          format: date-time
+        ContentData:
+          type: string
+          format: byte
+        ContentDomain:
+          type: string
+        ContentHash:
+          type: string
+        ContentHashAlgorithm:
+          type: string
+        ContentSize:
+          type: integer
+        ContentId:
+          type: integer
+        ContentIsValidatedSource:
+          type: boolean
+        ContentNote:
+          type: string
+        ContentReferrer:
+          type: string
+        ContentRelevance:
+          type: string
+        ContentTitle:
+          type: string
+        ContentUrl:
+          type: string
+        ContentLatitude:
+          type: number
+        ContentLongitude:
+          type: number
+        ContentRadius:
+          type: number
+        ContentDistanceUnit:
+          type: string
+        ContentCountry:
+          type: string
+        ContentCity:
+          type: string
+        ContentAddress:
+          type: string
+        ContentAddress2:
+          type: string
+        ContentPostalCode:
+          type: string
+        ContentRegion:
+          type: string
+        ContentStartedOn:
+          type: string
+          format: date-time
+        ContentTimeZone:
+          type: string
+        ContentMimeType:
+          type: string
+        ContentEndedOn:
+          type: string
+          format: date-time
+        ContentIsImportant:
+          type: boolean
+        ContentRootUuid:
+          type: string
+        ContentParentUuid:
+          type: string
+        ContentLevel:
+          type: integer
+        ContentFrom:
+          type: string
+        ContentTo:
+          type: string
+        ContentCc:
+          type: string
+        ContentBcc:
+          type: string
+        ContentAttributesJson:
+          type: string
+        ContentEnrichContentIndexDocument:
+          type: string
+        CaseManagementCreatedBy:
+          type: string
+        CaseManagementCreatedOn:
+          type: string
+          format: date-time
+        CaseManagementUpdatedBy:
+          type: string
+        CaseManagementUpdatedOn:
+          type: string
+          format: date-time
+        CaseManagementUuid:
+          type: string
+        CaseManagementName:
+          type: string
+        CaseManagementNote:
+          type: string
+        CaseManagementCaseNumber:
+          type: string
+        CaseManagementSubjectName:
+          type: string
+        CaseManagementCaseWorkerName:
+          type: string
+        ContentTagsJson:
+          type: string
+        ContentSelectorsJson:
+          type: string
+        AttachmentFileName:
+          type: string
+        ContentScreenShot:
+          type: string
+      required:
+        - ContentTypeName
+    ConfigurationOption:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int32
+        Key:
+          type: string
+        Value:
+          type: string
+        GroupName:
+          type: string
+          default: Configuration
+        Description:
+          type: string
+      required:
+        - Key
+        - GroupName
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
