@@ -26,7 +26,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CaseManagement'
+              $ref: '#/components/schemas/CaseManagementCreateSchema'
       responses:
         '201':
           description: Created
@@ -44,7 +44,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CaseManagement'
+              $ref: '#/components/schemas/CaseManagementUpdateSchema'
       responses:
         '200':
           description: Updated
@@ -154,6 +154,51 @@ paths:
           description: Record not found
 components:
   schemas:
+    CaseManagementCreateSchema:
+      type: object
+      properties:
+        Name:
+          type: string
+          description: Case name
+        Note:
+          type: string
+        CaseWorkerName:
+          type: string
+        CaseNumber:
+          type: string
+          description: The email of the author who captured the data
+        SubjectName:
+          type: string
+        SubjectImageData:
+          type: string
+          description: Base64 encoding of an image
+        SourcedFrom:
+          type: string
+      required:
+        - Name  
+    CaseManagementUpdateSchema:
+      type: object
+      properties:
+        Name:
+          type: string
+          description: Case name
+        Note:
+          type: string
+        CaseWorkerName:
+          type: string
+        CaseNumber:
+          type: string
+        SubjectName:
+          type: string
+        SubjectImageData:
+          type: string
+          description: Base64 encoding of an image
+        Uuid:
+          type: string
+        SourcedFrom:
+          type: string
+      required:
+        - Name        
     CaseManagement:
       type: object
       properties:
