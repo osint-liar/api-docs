@@ -7,6 +7,93 @@ servers:
   - url: http://127.0.0.1:9906/v1
     description: Your local installation of OSINT LIAR
 paths:
+  /api-key:
+    get:
+      summary: Get a list of api keys
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    put:
+      summary: Update the given Api Key
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the api key to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Record Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationOption'        
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete an Api Key
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found 
+  /application-key-token:
+    get:
+      summary: Get a list of application tokens
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    delete:
+      summary: Delete an Application token, its origin, permissions, and storage
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of application key token to delete
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found  
+    post:
+      summary: Create a new application key token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Created          
   /case-management:
     get:
       summary: Get a list of case management records
@@ -68,6 +155,106 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CaseManagement'
+  /configuration-option:
+    get:
+      summary: Get a list of configuration options
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    put:
+      summary: 
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Record Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationOption'        
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete a key from the configuration (Key may be protected)
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found  
+  /origin:
+    get:
+      summary: Get a list of origins
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    put:
+      summary: 
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the origin to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Record Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationOption'        
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete an Origin and its access permissions and storage
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found                
   /content:
     get:
       summary: Get a list of collected content, ordered by last updated on
@@ -358,12 +545,39 @@ components:
           type: string
       required:
         - ContentTypeName
+    ConfigurationOptionCreateSchema:
+      type: object
+      properties:
+        Key:
+          type: string
+        Value:
+          type: string
+        GroupName:
+          type: string
+          default: Configuration
+        Description:
+          type: string
+      required:
+        - Key
+        - GroupName 
+    ConfigurationOptionUpdateSchema:
+      type: object
+      properties:
+        Key:
+          type: string
+        Value:
+          type: string
+        GroupName:
+          type: string
+          default: Configuration
+        Description:
+          type: string
+      required:
+        - Key
+        - GroupName         
     ConfigurationOption:
       type: object
       properties:
-        Id:
-          type: integer
-          format: int32
         Key:
           type: string
         Value:
