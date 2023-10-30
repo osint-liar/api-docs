@@ -167,8 +167,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ConfigurationOption'
-    put:
-      summary: 
+    put: 
+      summary: Update the given configuration option if it is allowed
       parameters:
         - in: query
           name: Key
@@ -218,7 +218,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/ConfigurationOption'
     put:
-      summary: 
+      summary: Activate or deactivate the given Origin permission
       parameters:
         - in: query
           name: Key
@@ -339,6 +339,51 @@ paths:
                 $ref: '#/components/schemas/ApiCoreData'
         '404':
           description: Record not found
+  /notification:
+    get:
+      summary: Get all notifications
+      responses:
+        '200':
+          description: A list of notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'     
+    post:
+      summary: Create a new notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationCreateSchema'          
+      responses:
+        '201':
+          description: The created notification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'    
+    delete:
+      summary: Delete a notification
+      parameters:
+        - in: query
+          name: Id
+          required: true
+          schema:
+            type: integer
+          description: The unique identifier for the notification
+      responses:
+        '200':
+          description: Record Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'        
+        '404':
+          description: Record not found                
 components:
   schemas:
     CaseManagementCreateSchema:
@@ -545,36 +590,6 @@ components:
           type: string
       required:
         - ContentTypeName
-    ConfigurationOptionCreateSchema:
-      type: object
-      properties:
-        Key:
-          type: string
-        Value:
-          type: string
-        GroupName:
-          type: string
-          default: Configuration
-        Description:
-          type: string
-      required:
-        - Key
-        - GroupName 
-    ConfigurationOptionUpdateSchema:
-      type: object
-      properties:
-        Key:
-          type: string
-        Value:
-          type: string
-        GroupName:
-          type: string
-          default: Configuration
-        Description:
-          type: string
-      required:
-        - Key
-        - GroupName         
     ConfigurationOption:
       type: object
       properties:
@@ -590,6 +605,36 @@ components:
       required:
         - Key
         - GroupName
+    Notification:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int32
+        Title:
+          type: string
+        Message:
+          type: string
+        Type:
+          type: string
+        CreatedOn:
+          type: string
+          format: date-time
+        ReadOn:
+          type: string
+          format: date-time
+        SeenOn:
+          type: string
+          format: date-time  
+    NotificationCreateSchema:
+      type: object
+      properties:
+        Title:
+          type: string
+        Message:
+          type: string
+        Type:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http
