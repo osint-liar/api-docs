@@ -7,6 +7,93 @@ servers:
   - url: http://127.0.0.1:9906/v1
     description: Your local installation of OSINT LIAR
 paths:
+  /api-key:
+    get:
+      summary: Get a list of api keys
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    put:
+      summary: Update the given Api Key
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the api key to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Record Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationOption'        
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete an Api Key
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found 
+  /application-key-token:
+    get:
+      summary: Get a list of application tokens
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    delete:
+      summary: Delete an Application token, its origin, permissions, and storage
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of application key token to delete
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found  
+    post:
+      summary: Create a new application key token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Created          
   /case-management:
     get:
       summary: Get a list of case management records
@@ -26,7 +113,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CaseManagement'
+              $ref: '#/components/schemas/CaseManagementCreateSchema'
       responses:
         '201':
           description: Created
@@ -44,7 +131,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CaseManagement'
+              $ref: '#/components/schemas/CaseManagementUpdateSchema'
       responses:
         '200':
           description: Updated
@@ -68,6 +155,106 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CaseManagement'
+  /configuration-option:
+    get:
+      summary: Get a list of configuration options
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    put: 
+      summary: Update the given configuration option if it is allowed
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Record Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationOption'        
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete a key from the configuration (Key may be protected)
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found  
+  /origin:
+    get:
+      summary: Get a list of origins
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigurationOption'
+    put:
+      summary: Activate or deactivate the given Origin permission
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the origin to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationOption'
+      responses:
+        '200':
+          description: Record Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationOption'        
+        '404':
+          description: Record not found
+    delete:
+      summary: Delete an Origin and its access permissions and storage
+      parameters:
+        - in: query
+          name: Key
+          required: true
+          schema:
+            type: string
+          description: The name of the field to be updated
+      responses:
+        '200':
+          description: Record Deleted
+        '404':
+          description: Record not found                
   /content:
     get:
       summary: Get a list of collected content, ordered by last updated on
@@ -152,8 +339,98 @@ paths:
                 $ref: '#/components/schemas/ContentSchema'
         '404':
           description: Record not found
+  /notification:
+    get:
+      summary: Get all notifications
+      responses:
+        '200':
+          description: A list of notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'     
+    post:
+      summary: Create a new notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationCreateSchema'          
+      responses:
+        '201':
+          description: The created notification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'    
+    delete:
+      summary: Delete a notification
+      parameters:
+        - in: query
+          name: Id
+          required: true
+          schema:
+            type: integer
+          description: The unique identifier for the notification
+      responses:
+        '200':
+          description: Record Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'        
+        '404':
+          description: Record not found                
 components:
   schemas:
+    CaseManagementCreateSchema:
+      type: object
+      properties:
+        Name:
+          type: string
+          description: Case name
+        Note:
+          type: string
+        CaseWorkerName:
+          type: string
+        CaseNumber:
+          type: string
+          description: The email of the author who captured the data
+        SubjectName:
+          type: string
+        SubjectImageData:
+          type: string
+          description: Base64 encoding of an image
+        SourcedFrom:
+          type: string
+      required:
+        - Name  
+    CaseManagementUpdateSchema:
+      type: object
+      properties:
+        Name:
+          type: string
+          description: Case name
+        Note:
+          type: string
+        CaseWorkerName:
+          type: string
+        CaseNumber:
+          type: string
+        SubjectName:
+          type: string
+        SubjectImageData:
+          type: string
+          description: Base64 encoding of an image
+        Uuid:
+          type: string
+        SourcedFrom:
+          type: string
+      required:
+        - Name        
     CaseManagement:
       type: object
       properties:
@@ -316,9 +593,6 @@ components:
     ConfigurationOption:
       type: object
       properties:
-        Id:
-          type: integer
-          format: int32
         Key:
           type: string
         Value:
@@ -331,6 +605,36 @@ components:
       required:
         - Key
         - GroupName
+    Notification:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int32
+        Title:
+          type: string
+        Message:
+          type: string
+        Type:
+          type: string
+        CreatedOn:
+          type: string
+          format: date-time
+        ReadOn:
+          type: string
+          format: date-time
+        SeenOn:
+          type: string
+          format: date-time  
+    NotificationCreateSchema:
+      type: object
+      properties:
+        Title:
+          type: string
+        Message:
+          type: string
+        Type:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http
