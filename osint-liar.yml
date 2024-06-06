@@ -79,7 +79,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ApiCoreData'
+                  $ref: '#/components/schemas/ContentSchema'
     put:
       summary: Update an core data record by UUID
       parameters:
@@ -94,14 +94,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiCoreData'
+              $ref: '#/components/schemas/ContentSchema'
       responses:
         '200':
           description: Record Updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiCoreData'        
+                $ref: '#/components/schemas/ContentSchema'        
         '404':
           description: Record not found
     delete:
@@ -129,27 +129,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiCoreData'
+              $ref: '#/components/schemas/ContentSchema'
       responses:
         '200':
           description: Created
   /content/get:
     get:
-      summary: Get a single ApiCore data record by UUID
+      summary: Get a single Content record by UUID
       parameters:
         - in: query
           name: Uuid
           required: true
           schema:
             type: string
-          description: UUID of the core data record
+          description: UUID of the content record
       responses:
         '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiCoreData'
+                $ref: '#/components/schemas/ContentSchema'
         '404':
           description: Record not found
 components:
@@ -189,7 +189,7 @@ components:
           type: string
       required:
         - Name
-    ApiCoreData:
+    ContentSchema:
       type: object
       properties:
         ContentUuid:
